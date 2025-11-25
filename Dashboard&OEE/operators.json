@@ -1,0 +1,5 @@
+[
+  { "id": 1, "name": "Jan Kowalski", "pin": "1234" },
+  { "id": 2, "name": "Anna Nowak", "pin": "0000" },
+  { "id": 3, "name": "Piotr Wiśniewski", "pin": "1111" }
+]

@@ -1,0 +1,316 @@
+﻿@import "./theme-globals.css";
+@import "./styles/globals.css"; /* jeśli używasz; jeśli nie – usuń tę linię */
+
+/* =============== NOWOCZEŚNIEJSZY LOOK =============== */
+:root{
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-brand: "Manrope", var(--font-ui);
+  --radius: 18px;
+  --card-bg: rgba(16, 22, 32, .65);
+  --card-border: rgba(255,255,255,.06);
+  --card-border-hover: rgba(255,255,255,.12);
+  --shadow-1: 0 12px 30px rgba(0,0,0,.28);
+  --shadow-2: 0 16px 44px rgba(0,0,0,.35);
+  --muted: rgba(255,255,255,.8);
+  --accent: #22c55e;
+}
+
+html, body{
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-family: var(--font-ui);
+  letter-spacing: 0.01em;
+}
+
+/* ---- Layout ---- */
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+.sidebar{padding:16px}
+.logo{font-family:var(--font-brand);font-weight:800;font-size:22px;letter-spacing:.4px;margin-bottom:16px}
+.nav a{display:block;padding:10px 12px;border-radius:10px;text-decoration:none;margin-bottom:6px;font-weight:600;opacity:.92}
+.nav a.active,.nav a:hover{opacity:1}
+.content{padding:18px 18px 28px}
+
+/* ---- Banner ---- */
+.banner{ margin:10px 0 18px }
+.banner img{
+  width:100%; height:160px; object-fit:cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-1);
+}
+
+/* ---- Karty ---- */
+.card{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-1);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, background .12s;
+}
+.card:hover{ transform: translateY(-1px); border-color: var(--card-border-hover); box-shadow: var(--shadow-2) }
+.card__header{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px}
+.card__title{font-family:var(--font-brand);font-weight:800;letter-spacing:.2px;font-size:15px;color:rgba(255,255,255,.9)}
+.card__subtle{ color: rgba(255,255,255,.65); font-weight: 600; font-size: 12px }
+.title{font-size:13px;opacity:.85;margin-bottom:6px;font-weight:600;color:var(--muted)}
+.big{font-family:var(--font-brand);font-size:32px;font-weight:800;letter-spacing:.2px}
+
+/* ---- KPI/siatki ---- */
+.kpi{ display:flex; align-items:baseline; gap: 10px; margin-top: 4px }
+.kpi .k{ font-family: var(--font-brand); font-weight: 800; font-size: 36px; letter-spacing:.2px }
+.kv-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px }
+.kv{ background: rgba(255,255,255,.03); border:1px solid var(--card-border); border-radius:12px; padding:10px 12px }
+.kv__label{ color: rgba(255,255,255,.65); font-weight:600; font-size:12px; margin-bottom:4px }
+.kv__value{ font-family: var(--font-brand); font-weight:800; font-size:22px }
+.stats-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px }
+@media (max-width: 1200px){ .stats-grid{ grid-template-columns: repeat(2, 1fr) } }
+
+/* ---- Pigułki + badge ---- */
+.pills{ display:flex; flex-wrap:wrap; gap:8px }
+.pill{ background: rgba(255,255,255,.06); border:1px solid var(--card-border); color:#e9fbea;
+  border-radius:999px; padding:6px 10px; font-size:12px; font-weight:800 }
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;border:1px solid transparent}
+.badge.ready{ background:rgba(16,185,129,.18); color:#b7f7db; border-color:rgba(16,185,129,.35) }
+.badge.start{ background:rgba(59,130,246,.18); color:#cfe5ff; border-color:rgba(59,130,246,.35) }
+.badge.notready{ background:rgba(148,163,184,.18); color:#e0e7ff; border-color:rgba(148,163,184,.35) }
+.badge.emergency{ background:rgba(239,68,68,.22); color:#ffd7d7; border-color:rgba(239,68,68,.45) }
+
+/* ---- Tabela ---- */
+.table{ width:100%; border-collapse:separate; border-spacing:0 10px }
+.table thead th{ padding:10px 12px; color:rgba(255,255,255,.8); font-weight:800; font-size:13px }
+.table tbody tr{ background: rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08) }
+.table tbody td{ padding:10px 12px; font-weight:600 }
+
+/* ===== Dashboard layout + karty stat + ring (DOPINKA) ===== */
+
+/* przycisk „duch” obok Odśwież/Eksport */
+.btn--ghost{ background:transparent; color:inherit; border:1px solid var(--card-border); }
+
+/* Pasek filtrów nad dashboardem */
+.toolbar{
+  display:flex; align-items:flex-end; gap:12px; margin-bottom:16px;
+}
+.toolbar__group{ display:flex; flex-direction:column; gap:6px; }
+.toolbar__spacer{ flex:1; }
+
+/* Siatka 12-kolumnowa */
+.dashboard-grid{
+  display:grid;
+  grid-template-columns: repeat(12, minmax(0,1fr));
+  gap:14px;
+}
+
+/* Kolumny (używane jako klasy narzucone na karty) */
+.col-12{ grid-column: span 12; }
+.col-6 { grid-column: span 6; }
+.col-4 { grid-column: span 4; }
+.col-3 { grid-column: span 3; }
+
+@media (max-width:1100px){
+  .col-3,.col-4{ grid-column: span 6; }
+}
+@media (max-width:700px){
+  .col-3,.col-4,.col-6,.col-12{ grid-column: span 12; }
+}
+
+/* Karty „stat” – duże liczby */
+.stat{ display:grid; grid-template-rows:auto 1fr auto; min-height:120px; }
+.stat__label{ font-size:13px; opacity:.75; }
+.stat__value{ font-family:var(--font-brand); font-weight:800; font-size:42px; line-height:1.05; letter-spacing:.2px; }
+.stat__unit{ font-size:12px; opacity:.65; }
+
+/* Wykres pierścieniowy (conic-gradient) */
+.ring .title{ margin-bottom:10px; }
+.ring__wrap{ display:flex; align-items:center; gap:14px; }
+.ring__chart{
+  width:110px; height:110px; border-radius:50%;
+  border:1px solid var(--card-border);
+  box-shadow: inset 0 0 0 8px rgba(0,0,0,.25);
+}
+.ring__legend{ list-style:none; margin:0; padding:0; font-size:12px; opacity:.9; }
+.dot{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+.dot--work{ background:#3b82f6; }  /* niebieski: praca */
+.dot--idle{ background:#f59e0b; }  /* żółty: postój */
+.dot--emer{ background:#ef4444; }  /* czerwony: awaria */
+
+/* Tabele w kartach – pastylki-wiersze */
+.table-wrap{ overflow:auto; }
+.table{ width:100%; border-collapse:separate; border-spacing:0 8px; }
+.table th, .table td{ padding:10px 12px; text-align:left; }
+.table tbody tr{ background: rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); }
+.table tbody tr td:first-child{ border-radius:10px 0 0 10px; }
+.table tbody tr td:last-child{ border-radius:0 10px 10px 0; }
+
+/* pionowa kolumna na wiersze w Sesja bieżąca */
+.kv-col { display:flex; flex-direction:column; gap:10px }
+
+/* cienki separator między sekcjami */
+.kv-sep { height:1px; background:rgba(255,255,255,.08); margin:6px 0 }
+
+.dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; }
+.dot--work { background:#3b82f6; }
+.dot--idle { background:#f59e0b; }
+.dot--emer { background:#ef4444; }
+
+/* Banner u góry */
+.banner { margin: 8px 0 16px }
+.banner img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 10px 28px rgba(0,0,0,.28);
+}
+
+/* Siatka dashboardu: 12 kolumn */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 12px;
+}
+.col-4 { grid-column: span 4; }
+.col-8 { grid-column: span 8; }
+.col-12 { grid-column: span 12; }
+
+/* Stat kafelki – bez „h” pod spodem */
+.stat .stat__label { font-weight: 700; opacity: .85; margin-bottom: 6px; }
+.stat .stat__value { font-family: var(--font-brand, Inter), system-ui; font-size: 38px; font-weight: 800; letter-spacing: .2px; }
+
+/* Legenda przy wykresie */
+.legend { list-style: none; margin: 0; padding: 0; font-weight: 600; }
+.legend li { display: flex; align-items: center; gap: 8px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dot--work { background: #3b82f6; }
+.dot--idle { background: #f59e0b; }
+.dot--emer { background: #ef4444; }
+
+/* ===== DASHBOARD-ONLY (bez wpływu na Machines) ===== */
+.content.db { padding-top: 10px; }
+
+/* Baner u góry (tylko w Dashboard) */
+.content.db .banner {
+  margin: 8px 0 16px;
+}
+.content.db .banner img{
+  width:100%; height:160px; object-fit:cover;
+  border-radius:18px; border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 10px 28px rgba(0,0,0,.28);
+}
+
+/* Pasek z datami + przyciskami */
+.content.db .toolbar{
+  display:flex; align-items:flex-end; gap:12px; margin-bottom:16px;
+}
+.content.db .toolbar .spacer{ flex:1 1 auto; }
+.content.db .toolbar input{
+  background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.12);
+  border-radius:10px; color:inherit; padding:8px 10px; min-width:210px;
+}
+
+/* Siatka dashboardu — 12 kolumn */
+.content.db .dashboard-grid{
+  display:grid;
+  grid-template-columns: repeat(12, minmax(0,1fr));
+  gap:12px;
+}
+.content.db .col-3 { grid-column: span 3; }
+.content.db .col-4 { grid-column: span 4; }
+.content.db .col-6 { grid-column: span 6; }
+.content.db .col-12{ grid-column: span 12; }
+@media (max-width:1100px){
+  .content.db .col-3, .content.db .col-4 { grid-column: span 6; }
+}
+@media (max-width:700px){
+  .content.db .col-3, .content.db .col-4, .content.db .col-6, .content.db .col-12 { grid-column: span 12; }
+}
+
+/* Kafelki KPI w Dashboardzie (duże liczby) */
+.content.db .stat{ display:grid; grid-template-rows:auto 1fr; min-height:120px; }
+.content.db .stat__label{ font-weight:700; opacity:.85; margin-bottom:6px; }
+.content.db .stat__value{
+  font-family: var(--font-brand, Inter), system-ui;
+  font-size: 38px; font-weight: 800; letter-spacing:.2px;
+}
+/* schowaj „h” pod liczbami w Dashboardzie */
+.content.db .stat__unit{ display:none; }
+
+/* Wykres pierścieniowy (tylko w Dashboardzie) */
+.content.db .ring .title{ margin-bottom:10px; }
+.content.db .ring__wrap{ display:flex; align-items:center; gap:16px; min-height:140px; }
+.content.db .ring__chart{
+  width:130px; height:130px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow: inset 0 0 0 12px rgba(0,0,0,.25);
+}
+.content.db .ring__legend{
+  list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px;
+  font-weight:700;
+}
+.content.db .dot{ width:10px; height:10px; border-radius:50%; display:inline-block; margin-right:8px; }
+.content.db .dot--work{ background:#3b82f6; } /* praca – niebieski */
+.content.db .dot--idle{ background:#f59e0b; } /* postój – żółty  */
+.content.db .dot--emer{ background:#ef4444; } /* awaria – czerwony */
+
+/* Tabele w Dashboardzie: kapsułki-wiersze */
+.content.db .table-wrap{ overflow:auto; }
+.content.db .table{ width:100%; border-collapse:separate; border-spacing:0 10px; }
+.content.db .table th, .content.db .table td{ padding:10px 12px; text-align:left; }
+.content.db .table tbody tr{ background: rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08) }
+.content.db .table tbody tr td:first-child{ border-radius:10px 0 0 10px }
+.content.db .table tbody tr td:last-child{ border-radius:0 10px 10px 0 }
+
+/* ---- Modal ---- */
+.modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.modal {
+  background: #1e293b;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 320px;
+  box-shadow: var(--shadow-2);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.modal h3 { margin: 0 0 8px; font-size: 18px; font-weight: 700; }
+.modal input {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 10px;
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+.modal input:focus { border-color: var(--accent); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s;
+}
+.btn:hover { opacity: 0.9; }
+.btn-primary { background: var(--accent); color: #000; }
+.btn-secondary { background: rgba(255,255,255,0.1); color: white; }
+.error-msg { color: #ef4444; font-size: 13px; margin-top: -8px; }
+
+.operator-card {
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.operator-info { font-size: 13px; font-weight: 600; }
+.operator-label { font-size: 11px; opacity: 0.6; display: block; margin-bottom: 2px; }
+.btn-logout { font-size: 11px; padding: 4px 8px; background: rgba(255,255,255,0.1); border-radius: 6px; cursor: pointer; }

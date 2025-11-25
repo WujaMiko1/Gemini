@@ -1,0 +1,47 @@
+/* ====== Znaczniki aktywności dla Flatpickr (ciemny motyw) ====== */
+
+.flatpickr-day.day-has-work::after,
+.flatpickr-day.day-idle-only::after,
+.flatpickr-day.day-has-emergency::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+/* kolory znaczników */
+.flatpickr-day.day-has-work::after { background: #18b86a; }       /* zielony */
+.flatpickr-day.day-idle-only::after { background: #ffc107; }      /* żółty */
+.flatpickr-day.day-has-emergency::after { background: #ff4d4f; }  /* czerwony */
+
+/* delikatny obrys kafelka z danymi */
+.flatpickr-day.day-has-work { box-shadow: inset 0 0 0 1px rgba(24,184,106,0.25); }
+.flatpickr-day.day-idle-only { box-shadow: inset 0 0 0 1px rgba(255,193,7,0.25); }
+.flatpickr-day.day-has-emergency { box-shadow: inset 0 0 0 1px rgba(255,77,79,0.28); }
+
+/* brak danych – neutralnie */
+.flatpickr-day.day-no-data { opacity: 0.9; }
+
+/* lekki hover na ciemnym tle */
+.flatpickr-day:hover { filter: brightness(1.1); }
+
+/* dopasowanie inputów do Twojego motywu */
+.date-input {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #f1f5f9;
+  padding: 10px 12px;
+  border-radius: 10px;
+  outline: none;
+}
+.date-input:focus {
+  border-color: rgba(56,189,248,0.5);
+  box-shadow: 0 0 0 2px rgba(56,189,248,0.25);
+}
+
+.text-muted { opacity: 0.8; }

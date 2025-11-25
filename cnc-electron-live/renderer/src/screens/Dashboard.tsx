@@ -36,7 +36,7 @@ type Runtime = {
   operator?: string;
 } | null;
 
-type Snapshot = { ts?: number; progress?: number | null; status?: string | null; currentProgram?: string | null; mode?: string | null };
+type Snapshot = { ts?: number; progress?: number | null; status?: string | null; currentProgram?: string | null; mode?: string | null; tool?: number | null; };
 
 const DEFAULT_STATS: Stats = {
   totals: { workSec: 0, idleSec: 0, emergencySec: 0 },
@@ -215,6 +215,23 @@ export default function Dashboard() {
           <div className="stat__value">{oee}%</div>
           <div className="stat__unit">+ {mergedSessions.length} sesji</div>
         </article>
+      </div>
+
+      {/* OEE i narzędzia */}
+      <div className="card" style={{ marginTop: 12 }}>
+        <div className="card__header">
+          <div className="title">Efektywność i narzędzia</div>
+        </div>
+        <div className="grid" style={{ gridTemplateColumns: "repeat(2,1fr)", gap: 12 }}>
+          <div className="kv">
+            <div className="kv__label">OEE (Całkowita Efektywność Sprzętu)</div>
+            <div className="kv__value">{oee}%</div>
+          </div>
+          <div className="kv">
+            <div className="kv__label">Aktualne narzędzie</div>
+            <div className="kv__value">{snap?.tool ?? "—"}</div>
+          </div>
+        </div>
       </div>
 
       {/* LIVE % i progress */}

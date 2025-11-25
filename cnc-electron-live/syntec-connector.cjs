@@ -1,3 +1,4 @@
+process.env.EDGE_USE_CORECLR = '0';
 let edge;
 try {
   edge = require('electron-edge-js');

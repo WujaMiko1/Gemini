@@ -1,0 +1,3 @@
+
+> cnc-electron-live@1.0.0 dev
+> concurrently -k "vite" "wait-on http://localhost:5173 && cross-env NODE_ENV=development electron ."
