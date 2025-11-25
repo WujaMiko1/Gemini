@@ -1,0 +1,169 @@
+﻿@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+
+  --hero-height: 9rem;         /* wysokość obrazka w headerze (np. 6–10rem) */
+  --tabs-offset: 1rem;       /* jak daleko tabs mają być pod banerem */
+  --content-padding-top: 1rem; /* dodatkowy odstęp nad treścią (opcjonalnie) */
+  --font-size: 14px;
+  --background: #0a0f1c;            /* ciemna baza */
+  --foreground: oklch(0.985 0 0);
+  --card: rgba(255,255,255,0.04);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: #00d6c9;               /* turkus NEXT-ish */
+  --primary-foreground: #030213;
+  --secondary: #0b2a3f;
+  --secondary-foreground: #e9f7ff;
+  --muted: #0f1b2a;
+  --muted-foreground: #a9b4c0;
+  --accent: #102033;
+  --accent-foreground: #e9f7ff;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255,255,255,0.10);
+  --input: transparent;
+  --input-background: rgba(255,255,255,0.06);
+  --switch-background: #2a3a4a;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: rgba(0,214,201,.55);
+  --chart-1: #2ad7c9;
+  --chart-2: #3aa1ff;
+  --chart-3: #7dd3fc;
+  --chart-4: #22c55e;
+  --chart-5: #f59e0b;
+  --radius: 0.625rem;
+
+  /* sidebar (jeśli używasz) */
+  --sidebar: #0f1724;
+  --sidebar-foreground: #e5f6ff;
+  --sidebar-primary: #00d6c9;
+  --sidebar-primary-foreground: #05121b;
+  --sidebar-accent: #102033;
+  --sidebar-accent-foreground: #cfefff;
+  --sidebar-border: rgba(255,255,255,.08);
+  --sidebar-ring: rgba(0,214,201,.55);
+}
+
+.dark {
+  /* zachowujemy podobne wartości w dark */
+}
+
+/* =========================================
+   THEME TOKENS (dla tailwinda – nie zmieniaj)
+   ========================================= */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* ============ BASE ============ */
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
+}
+
+html { font-size: var(--font-size); }
+html, body, #root { height: 100%; }
+
+/* =============================
+   MOTYW TŁA (bez logotypu)
+   – fale/szum w CSS
+   ============================= */
+body {
+  /* warstwa 1: ciemny radialny spotlight turkus/niebieski */
+  background-image:
+    radial-gradient(1000px 600px at 20% 25%, rgba(0,214,201,.20), transparent 60%),
+    radial-gradient(900px 550px at 80% 70%, rgba(58,161,255,.20), transparent 60%),
+
+    /* warstwa 2: subtelna siatka izometryczna */
+    linear-gradient(135deg, rgba(255,255,255,.06) 10%, transparent 10%) ,
+    linear-gradient(225deg, rgba(255,255,255,.06) 10%, transparent 10%),
+
+    /* warstwa 3: delikatne falowania */
+    radial-gradient(60% 120% at 50% 0%, rgba(0,214,201,.10), transparent 70%),
+    radial-gradient(60% 120% at 50% 100%, rgba(58,161,255,.08), transparent 70%);
+  background-size:
+    100% 100%,
+    100% 100%,
+
+    38px 38px,
+    38px 38px,
+
+    100% 100%,
+    100% 100%;
+  background-position:
+    center,
+    center,
+
+    0 0,
+    19px 19px, /* przesunięcie drugiej siatki dla efektu kratki */
+
+    center,
+    center;
+  background-blend-mode: screen, screen, overlay, overlay, screen, screen;
+  background-attachment: fixed;
+}
+
+/* ============ UI HELPERS (glass/kontrast) ============ */
+.container       { @apply max-w-[1550px]; }   /* SZERSZA KONTENTOWA */
+.panel           { @apply bg-white/5 border border-white/10 rounded-2xl p-4 md:p-6 lg:p-8 backdrop-blur shadow-2xl; }
+.card-glass      { @apply bg-white/5 border border-white/10 rounded-xl shadow-lg backdrop-blur; }
+.tab-pill        { @apply px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/10 transition data-[state=active]:bg-white/20 data-[state=active]:text-white; }
+.hero-frame      { @apply rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 bg-black/30 backdrop-blur; }
+
+
+
+/* Recharts – lepsza czytelność */
+.recharts-cartesian-axis-line,
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line { stroke: rgba(255,255,255,.08); }
+.recharts-text, .recharts-legend-item-text { fill: rgba(255,255,255,.85) !important; }
+
+/* Scrollbar (opcjonalnie) */
+* { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.25) transparent; }
+::-webkit-scrollbar{ width:10px;height:10px; }
+::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.25); border-radius:9999px; }
+::-webkit-scrollbar-track{ background:transparent; }
+
+
