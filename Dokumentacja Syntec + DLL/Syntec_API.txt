@@ -1,0 +1,1205 @@
+RemoteAPI 操作手册
+匯出日期： 2024-10-15
+修改日期： 2022-05-23
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+ – 2系统介绍 使用说明 函式介绍
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统简介  – 31 系统简介
+1.1 解决方案架构  
+  新代的 Dipole 功能将人机与核心分离 (图一 ,图二 )，让使用者于前台的应用程序 (例如标准人机 )，透过
+网际网路，进行操控后台的控制器。使用者可以藉由这个架构进行远端监控、远端诊断。前台应用程
+序的开发环境也不再受限于 Windows CE ，可以开发 Windows XP, Windows 7,… 的一般应用程序，从而创
+造无限的可能性。
+本使用手册教导使用者如何于前台 Windows 用户端安装 CNC模拟软体，以及开始使用 RemoteCNC 一对
+多API的各项功能。
+
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统简介  – 41.
+2.
+•
+•1.2 如何透过人机设定控制器开启 Dipole
+服务器设定位于人机 FenuBar ：(依控制器不同则有些许不同 )
+F6参数设定  → F10下一页  → F7核心服务器 (图三 )。
+F5 维护  → F2 网路设定  → F5 核心服务器
+ 
+利用人机修改 Dipole 的设定值：
+此FenuBar 功能会开启  “核心服务器设定页面 ” (图四 )。
+以下为各个参数说明：
+“开机是否启动服务器 ” 为开机时是否自动启动核心的 Dipole 功能。
+“逾时时间 ” 为当网路超过此时间无回应，网路连线中断。
+
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统简介  – 5当使用者完成核心 Dipole 的设定后，可按 ”F3确认 ”储存设定值，或是按 ”F4取消 ”还原设定值。设定后，
+下次开机时将自动启动 Dipole 功能
+ 系统介绍 使用说明 函式介绍
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+专案设定  – 6•
+1.
+2.
+3.
+1.
+2.
+3.
+4.
+5.2 专案设定
+请参考所附范例 SyntecRemoteExample ，将专案 reference Syntec.RemoteCNC.dll ( 1.2.0 版本后
+(含)，改为 reference Syntec.OpenCNC.dll )
+2.1 使用前注意事项
+请先确认控制器版本，并查下表来找到对应的 RemoteAPI 版本
+若使用  v1 版的 RemoteAPI 请先安装与控制器同版本的 32模拟软体 MacroDev
+Syntec.OpenCNC.dll, Syntec.RemoteCNC.dll, Syntec.RemoteObj.dll, OCAPI.dll, OCUSER.dll... 等dll 
+皆需与主程序置于同一资料夹
+2.2 排除常见问题集
+电脑防火墙需开启  port 5568, port 5570 以便控制器与电脑连线。
+” Windows 环境可以在  防火墙  > 进阶设定  > 输入规则  > 新增规则  > 连接埠  > TCP > 输入 5568,5570 
+> 允许所有连线  “
+ 
+电脑有两张网卡需注意，将连接控制器的网卡优先权调高，方可正常连线。
+“Windows 环境可在  网路和共用中心  > 进入变更介面卡设定  > 按 F10会跑出工具列  > 进阶  > 进阶
+设定  > 在连线地方把该网卡网上调  ”
+使用 v4版本，如发现网路不稳定，回传错误资讯，请于十秒后再行连线。
+使用 1.0.12_v1 ，发现有缺  Syntec. RemoteCNC.dll 和 Syntec. RemoteObj.dll ，请上官网重抓
+1.0.12_v1 。
+使用 1.2.0编译不过，请改 reference Syntec.OpenCNC.dll 。
+ 注：若以上  Windows 操作有误，请自行蒐寻相关设定
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+专案设定  – 72.3 RemoteAPI 版本对照表
+控制器版本 RemoteAPI 版本 备注
+10.116.54.x 以后 1.2.1 以后 移除对于新版本控制器的使用
+限制
+10.116.36.x 1.0.12_v4
+10.116.24.x 1.0.12_v3
+10.116.10.x ~ 10.116.16.x 1.0.12_v2
+10.116.0.x 1.0.12_v1 需安装对应 MarcoDev
+系统介绍 使用说明 函式介绍
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+设定基本型态  & 回传错误  – 83 设定基本型态  & 回传错误
+资料型态
+型态名称 所占空间
+byte 8位元
+short 16位元
+int 32位元
+float 32位元
+string 不限
+回传错误说明
+传
+回
+值
+(sh
+ort)错误类别 说明
+-18 Not supported 控制器不支援此函式
+-17 Protocol error (Ethernet 
+version only)Data from Ethernet Board is incorrect.Contact with the service 
+section or the section in charge.
+-16 Socket error (Ethernet 
+version only)Investigate CNC power supply, Ethernet cable and I/F board.
+-15 DLL file error There is no DLL file for each CNC series corresponding to 
+specified node.
+-14 USBEmpty USB is empty
+-13 NoUSB No USB is pulgin
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+设定基本型态  & 回传错误  – 9传
+回
+值
+(sh
+ort)错误类别 说明
+-8 Handle number error Get the library handle number.
+-7 Version mismatch between 
+the CNC/PMC and libraryThe CNC/PMC version does not match that of the library.Replace 
+the library or the CNC/PMC control software.
+-6 Abnormal library state An unanticipated error occurred.Contact with the section in 
+charge.
+-2 Reset or stop request The RESET or STOP button was pressed.Call the termination 
+function.
+-1 CNC Busy Wait until the completion of CNC processing, or retry.
+0 Normal termination 完成作业，未发生错误 !
+1 Error(function is not 
+executed, or not available)Specific function which must be executed beforehand has not 
+been executed.Otherwise that function is not available.
+2 Error(data block length 
+error, error of number of 
+data)Check and correct the data block length or number of data.
+3 Error(data number error) Check and correct the data number.
+4 Error(data attribute error) Check and correct the data attribute.
+5 Error(data error) Check and correct the data.
+6 Error(no option) There is no corresponding CNC option.
+7 Error(write protection) Write operation is prohibited.
+8 Error(memory overflow) CNC tape memory is overflowed.
+9 Error(CNC parameter error) CNC parameter is set incorrectly.
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+设定基本型态  & 回传错误  – 10传
+回
+值
+(sh
+ort)错误类别 说明
+10 Error(buffer empty/full) The buffer is empty or full.
+11 Error(path number error) A path number is incorrect.
+12 Error(CNC mode error) The CNC mode is incorrect.Correct the CNC mode.
+13 Error(CNC execution 
+rejection)The execution at the CNC is rejected.Check the condition of 
+execution.
+14 Error(Data server error) Some errors occur at the data server.
+15 Error(alarm) The function cannot be executed due to an alarm in 
+CNC.Remove the cause of alarm.
+16 Error(stop) CNC status is stop or emergency.
+17 Error(State of data 
+protection)Data is protected by the CNC data protection function.
+18 Error(Not found Machine 
+ID)Please Check or not send CNC_CONNECTION command.
+19 Error(No out) Please Check NO.
+20 Error(Need to Update 
+RemoteCnc Version)RemoteAPI version is too old for connected controller, need to 
+update RemoteAPI version.
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+基本类别  – 11•
+•4 基本类别
+RoundTripTime ：当前连线往返时间
+函式名称 int RoundTripTime
+引数变数名称 型别 [in/out] 说明
+无
+传回值 当前连线往返时间，单位为毫秒 (ms)
+若未连线，则返回值为 -1
+isUSBExist ： 是否有 USB插入
+函式名称 bool isUSBExist( )
+引数变数名称 型别 [in/out] 说明
+无
+传回值 True => 有USB, False => 无USB
+SeriesNo ：控制器序号
+函式名称 short GetSeriesNo(…)
+引数变数名称 型别 [in/out] 说明
+szSeriesNo string out 控制器序号或
+空字串
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+基本类别  – 12CncOption ：控制器软件选配
+函式名称 short GetCncOption(…)
+引数变数名称 型别 [in/out] 说明
+szCncOption string out 控制器的软件选
+配 (以空格区分 )
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+MainBoardPlatformName ：控制器主机板型号
+函式名称 short GetMainBoardPlatformName(…)
+引数变数名称 型别 [in/out] 说明
+szName string out 控制器主机板型号
+或空字串
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_information ：基本相关信息
+函式名称 short READ_information(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+基本类别  – 13引数变数名称 型别 [in/out] 说明
+Axes short out 可控制轴数
+CncType string out ex :'18' : Series 
+180/180i
+MaxAxes short out 最大轴数
+Series string out M/T type
+Nc_Ver string out NC 版本
+AxisName string[] out 各轴座标名称
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_status ：状态信息
+函式名称 short READ_status(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+基本类别  – 14引数变数名称 型别 [in/out] 说明
+MainProg string out 主程序档名
+CurProg string out 目前执行档名
+CurSeq x out 不支援，预设  -1
+Mode string out ex:"MDI", "MEM"…
+Status string out ex:"STOP", "START"…
+Alarm string out ex:"ALARM", "****"
+EMG string out ex:"EMG", "****"
+传回值 0:完成作业，其他请参考 3-2回传错误说明            
+备注 Alarm ：当有 Alarm 发生时，回传 "ALARM" ；当无 Alarm 发生时，回传 "****"
+EMG：当有 EMERGENCE STOP 发生时，回传 "EMG" ；当无 EMERGENCE 
+STOP 发生时，回传 "****"
+READ_position ：座标信息
+函式名称 short READ_position(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+基本类别  – 15引数变数名称 型别 [in/out] 说明
+AxisName string[] out 各轴座标
+名称
+DecPoint short out 小数位数
+Unit string[] out 座标单位
+Mach float[] out 机械座标
+Abs float[] out 绝对座标
+Rel float[] out 相对座标
+Dist float[] out 剩余距离
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+WRITE_relpos ：设定相对座标数值
+函式名称 short WRITE_relpos(…)
+引数变数名称 型别 [in/out] 说明
+AxisName string in 轴座标名称
+PosValue double in 相对座标数
+值
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+基本类别  – 16READ_gcode ：G Code
+函式名称 short READ_gcode(…)
+引数变数名称 型别 [in/out] 说明
+Gdata string[] out G Code
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_othercode ：其他 Code(H Code,D Code,T Code,M Code,B 
+Code,F Code,S Code)
+函式名称 short READ_othercode(…)
+引数变数名称 型别 [in/out] 说明
+HCode int out H Code
+DCode int out D Code
+TCode int out T Code
+MCode int out M Code
+FCode int out F Code
+SCode int out S Code
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+基本类别  – 17READ_spindle ：进给率 /转速
+函式名称 short READ_spindle(…)
+引数变数名称 型别 [in/out] 说明
+OvFeed float out Feed Rate Over 
+Ride
+OvSpindle float out Spindle Over Ride
+ActFeed float out 实际进给率
+ActSpindle int out 实际主轴转速
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_time ：时间
+函式名称 short READ_time(…)
+引数变数名称 型别 [in/out] 说明
+PowerOnTime int out 开机时间 (秒)
+AccumulateCuttingTi
+meint out 切削时间 (秒)
+CuttingTimePerCycle int out CYCLE 时间 (秒)
+WorkTime int out 加工时间 (秒)
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+ 
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+基本类别  – 18READ_part_count ：工件数
+函式名称 short READ_part_count(…)
+引数变数名称 型别 [in/out] 说明
+part_count int out 工件数
+require_part_count Int Out 需求工件
+数
+Total_part_count int out 总工件数
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+ 
+DOWNLOAD_work_record ：下载远端加工记录档案
+函式名称 short DOWNLOAD_work_record (…)
+引数变数名称 型别 [in/out] 说明
+Destination string in 下载目的路
+径
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+IsDipoleSupported ：是否可以在给定的 timeout 时间内透过 dipole
+连线
+函式名称 bool IsDipoleSupported (…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+基本类别  – 19引数变数名称 型别 [in/out] 说明
+IPAddr string in 目地端 IP address
+Timeout uint in 指定的 timeout 时
+间(毫秒 )
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_MakerConfigInfo ：取得机械厂信息
+函式名称 short READ_MakerConfigInfo(…)
+引数变数名称 型别 [in/out] 说明
+szModel string out 机台型号
+szMachSN string out 机台序号
+szDate string out 机台出厂日
+szDevSN string out 电控序号
+szPhone string out 机械厂电话
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+WRITE_MakerConfigInfo ：设定机械厂信息
+函式名称 short WRITE_MakerConfigInfo(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+基本类别  – 20引数变数名称 型别 [in/out] 说明
+szModel string in 机台型号
+szMachSN string in 机台序号
+szDate string in 机台出厂日
+szDevSN string in 电控序号
+szPhone string in 机械厂电话
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+警报类别函式  – 215 警报类别函式
+READ_alm_current ：目前发生的警报
+函式名称 short READ_alm_current(…)
+引数变数名称 型别 [in/out] 说明
+IsAlarm bool out 判断是否有警
+报
+AlmMsg String[] out 取得目前发生
+的警报讯息
+AlmTime DateTime[] out 取得目前发生
+的警报时间
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 警报阵列的排放方式，由旧到新。
+警报讯息格式为 ("类别 (Motion)"  " 编号 "  "说明 ")
+READ_alm_history ：警报履历
+函式名称 short READ_alm_history(…)
+引数变数名称 型别 [in/out] 说明
+AlmMsg string[] out 警报讯息
+AlmTime DateTime[] out 警报时间及
+日期
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+警报类别函式  – 22•
+•
+•
+•备注 警报阵列的排放方式，由旧到新。
+警报讯息格式为 ("类别 (Motion)"  " 编号 "  "说明 ")
+函式名称 short READ_alm_history(…)
+引数变数名称 型别 [in/out] 说明
+AlmMsg string[] out 警报讯息
+AlmTime DateTime[] out 警报时间及日
+期
+Duration uint[] out 经历时间，单
+位 s 秒
+Clear bool[] out 是否已解除
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 仅支援  10.116.54Q, 10.118.0K, 10.118.11 以上
+警报阵列的排放方式，由新到旧。
+警报讯息格式为 ("类别 (Motion)"  " 编号 "  "说明 ")
+[RemoteAPI] 1.2.3 后，不支援 Clear 参数，皆回传 false
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+刀具补正类别函式  – 236 刀具补正类别函式
+READ_offset_title ：取得刀具 Offset 的标题列
+函式名称 short READ_offset_title(…)
+引数变数名称 型别 [in/out] 说明
+OffsetTitle string[] out 标题列
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注系列 回传值说明 机型
+Syntec M 系列 {"RADIUS GEOM","RADIUS 
+WEAR","LENGTH 
+GEOM","LENGTH WEAR"}Mill, Drill, Wood, 
+GlassGrind
+Syntec T 系列 {"WEAR X","WEAR Z","WEAR 
+A","LENGTH X","LENGTH 
+Y","LENGTH A","TOOL NOSE 
+RADIUS","TOOL NOSE R 
+WEAR","TOOL NOSE"}Lathe
+READ_offset_all ：取得所有刀具 Offset
+函式名称 short READ_offset_all(…)
+引数变数名称 型别 [in/out] 说明
+OffsetData double[][] out 补正资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+刀具补正类别函式  – 24备注 OffsetData 第二个阵列，配合标题名称 (Length Geom…) 。
+由第 1号刀开始取得资料。
+READ_offset_scope ：依指定范围取得刀具 Offset
+函式名称 short READ_offset_scope(…)
+引数变数名称 型别 [in/out] 说明
+StartNumber short in 起始号码 (从1
+开始 )
+EndNumber short in 终止号码
+OffsetData double[][] out 补正资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_offset_single ：取得单笔刀具 Offset
+函式名称 short READ_offset_single(…)
+引数变数名称 型别 [in/out] 说明
+ofNumber short in 设定补正编
+号
+OffsetData double[] out 补正资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+刀具补正类别函式  – 25WRITE_offset_all ：写入所有刀具 Offset
+函式名称 short WRITE_offset_all(…)
+引数变数名称 型别 [in/out] 说明
+OffsetData double[][] in 设定补正
+资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 由第 1把刀开始写入，一直到 OffsetData 结束。
+WRITE_offset_single ：写入单笔刀具 Offset
+函式名称 short WRITE_offset_single(…)
+引数变数名称 型别 [in/out] 说明
+ofNumber short in 设定补正编
+号
+OffsetData double[] in 设定补正资
+料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_offset_count ：取得刀具 Offset 笔数
+函式名称 short READ_offset_count(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+刀具补正类别函式  – 26引数变数名称 型别 [in/out] 说明
+Count short out 补正笔数
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+工件座标类别函式  – 277 工件座标类别函式
+READ_work_coord_axis ：取得工件座标的标题名称
+函式名称 short READ_work_coord_title(…)
+引数变数名称 型别 [in/out] 说明
+WorkCoordTitle string[] out 标题名
+称
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_work_coord_all ：取得所有工件座标资料
+函式名称 short READ_work_coord_all(…)
+引数变数名称 型别 [in/out] 说明
+CoordName string[] out 项
+目,ex:EXT,G54,G55
+…
+WorkCoord float[][] out 工件座标资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 CoordName 项目如 :
+EXT,MPGShift, G54, G55, G56, G57, G58, G59 , G54P7, G54P8, G54P100 等
+READ_work_coord_scope ：依指定范围取得工件座标资料
+函式名称 short READ_work_coord_scope(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+工件座标类别函式  – 28引数变数名称 型别 [in/out] 说明
+StartNumber short in 起始编号
+EndNumber short in 终止编号
+CoordName string[] out 项
+目,ex:EXT,G54,G55
+…
+WorkCoord float[][] out 工件座标资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 CoordName 项目如 :
+EXT,MPGShift, G54, G55, G56, G57, G58, G59 , G54P7, G54P8, G54P100 等
+依指定编号对应至工件座标名称如下列范围：
+工件名称 对应编号
+EXT 0
+MPG Shift 1
+G54 2
+G55 3
+G56 4
+G57 5
+G58 6
+G59 7
+G54 P7~P100 8~101
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+工件座标类别函式  – 29READ_work_coord_single ：取得单笔工件座标资料
+函式名称 short READ_work_coord_single(…)
+引数变数名称 型别 [in/out] 说明
+CoordName string in 项
+目,ex:EXT,G54,G55
+…
+WorkCoord float[] out 工件座标资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+WRITE_work_coord_all ：写入所有工件座标资料
+函式名称 short WRITE_work_coord_all(…)
+引数变数名称 型别 [in/out] 说明
+CoordName string[] in 设定项
+目,ex:EXT,G54,G55
+…
+WorkCoord float[][] in 设定工件座标资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+WRITE_work_coord_single ：写入单笔工件座标资料
+函式名称 short WRITE_work_coord_single(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+工件座标类别函式  – 30引数变数名称 型别 [in/out] 说明
+CoordName string in 设定项
+目,ex:EXT,G54,G55
+…
+WorkCoord float[] in 设定工件座标资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_work_coord_count ：取得工件座标笔数
+函式名称 short READ_work_coord_count(…)
+引数变数名称 型别 [in/out] 说明
+Count short out 工件座标笔数
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+Macro 变数类别函式 (共通变数 ) – 318 Macro 变数类别函式 (共通变数 )
+READ_macro_all ：取得所有 Macro 变数 (共通变数 )资料
+函式名称 short READ_macro_all(…)
+引数变数名称 型别 [in/out] 说明
+MacroNumber int[] out Macro 编号
+MacroData double[] out Macro 变数资
+料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_macro_scope ：依指定范围取得 Macro( 共通变数 )变数资料
+函式名称 short READ_macro_scope(…)
+引数变数名称 型别 [in/out] 说明
+StartNumber int in 起始号码 (从1
+开始 )
+EndNumber int in 终止号码
+MacroNumber int[] out Macro 编号
+MacroData double[] out Macro 变数资
+料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+Macro 变数类别函式 (共通变数 ) – 32WRITE_macro_all ：写入所有 Macro 变数 (共通变数 )资料
+函式名称 short WRITE_macro_all(…)
+引数变数名称 型别 [in/out] 说明
+MacroNumber int[] in 设定 Macro 编
+号
+MacroData double[] in 设定 Macro 变
+数资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_macro_single ：取得单笔 Macro 变数 (共通变数 )资料
+函式名称 short READ_macro_single(…)
+引数变数名称 型别 [in/out] 说明
+MacroNumber int in Macro 编号
+MacroData double out Macro 变数资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+WRITE_macro_single ：写入单笔 Macro 变数 (共通变数 )资料
+函式名称 short WRITE_macro_single(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+Macro 变数类别函式 (共通变数 ) – 33引数变数名称 型别 [in/out] 说明
+MacroNumber int in 设定 Macro 编号
+MacroData double in 设定 Macro 变数
+资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_macro_variable ：取得 Macro 变数 (共通变数 )起始及终止编
+号
+函式名称 short READ_macro_variable(…)
+引数变数名称 型别 [in/out] 说明
+Variable int[][] out Macro 变数起始及
+终止编号
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 阵列宣告： Variable[type][0]:Start Number
+          Variable[type][1]:End Number
+如：
+Variable[0][0]:100
+    Variable[0][1]:199
+    Variable[1][0]:500
+    Variable[1][1]:599
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+加工程序类别函式  – 34•
+•
+•
+•9 加工程序类别函式
+WRITE_nc_main ：指定加工程序
+函式名称 short WRITE_nc_main(…)
+引数型态 1变数名称 型别 [in/out] 说明
+szProgName string in 加工程序名
+称
+引数型态 2变数名称 型别 [in/out] 说明
+szProgName int in 加工程序名
+称
+nCoordID int in 轴群号码
+nLineNumber int in 起始行号
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 后台控制器 支援版本： 10.116.10x 以上
+后台控制器板本 10.116.10x-10.116.16x 指定完加工程序，不可更
+改控制器模式。
+引数型态 2的API 为10.116.54A 之后的
+Syntec.RemoteCNC.Win32.dll 才提供
+使用引数型态 2时，可参阅此文档  多轴群规划与 MST多通道应
+用手册
+READ_nc_mem_list ：取得机台内部加工程序清单
+函式名称 short READ_nc_mem_list(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+加工程序类别函式  – 35引数变数名称 型别 [in/out] 说明
+NcList string[][] out 加工程序清
+单
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 由于各家厂商 NC清单皆不相同，建议如下格式：
+NcList[][0]:NC Name
+NcList[][1]:Size (byte)
+NcList[][2]:Last Write DateTime
+NcList[][3]: file / directory
+注：若无加工档，仍回传 -1(CNCBUSY) ，此点请使用者注意
+UPLOAD_nc_mem ：上传加工程序至控制器
+函式名称 short UPLOAD_nc_mem(…)
+引数变数名称 型别 [in/out] 说明
+Source string in 本机全路径名
+称
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+DOWNLOAD_nc_mem ：下载加工程序至本机
+函式名称 short UPLOAD_nc_mem(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+加工程序类别函式  – 36引数变数名称 型别 [in/out] 说明
+Source string in NC档名称
+Destination string in 本机资料夹
+路径
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+DEL_nc_mem ：删除控制器内的加工程序
+函式名称 short DEL_nc_mem(…)
+引数变数名称 型别 [in/out] 说
+明
+Name string in 名
+称
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_nc_freespace ：剩余空间容量 (k)
+函式名称 short READ_nc_freespace(…)
+引数变数名称 型别 [in/out] 说明
+FreeSpace Long out 剩余空间容量
+(k)
+传回值 0:完成作业，其他请参考附件一回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+加工程序类别函式  – 371.
+2.
+3.
+4.READ_nc_OPLog ：取得操作记录
+函式名称 short READ_nc_OPLog(…)
+引数变数名称 型别 [in/out] 说明
+OPLog string[] out 操作记录
+count int in/out 记录比数
+传回值 0:完成作业，其他请参考附件一回传错误说明
+备注 count 传入欲读取记录比数，并传回所读取之比数。
+传入参数 count 为0时，传回所有的操作记录。
+发生 timeout 错误，可使用  SynetcRemoteCNC(ip,timeout) 建构子来
+将timeout 调高， timeout=0 表无， timeout 的单位为 ms。
+回传回来的 OPLog 可以参考附录获取相关信息
+注：若无 Log时，仍回传原阵列，并写入  “No Log”
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统参数类别函式  – 3810 系统参数类别函式
+READ_param_max ：取得机台参数最大号码
+函式名称 short READ_param_max(…)
+引数变数名称 型别 [in/out] 说明
+MaxNumber int out 参数最大号
+码
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_param_schema ：取得所有参数资料
+函式名称 short READ_param_schema(…)
+引数变数名称 型别 [in/out] 说明
+index int[] out 参数编号
+value int[] out 参数值
+context string[] out 参数说明
+bound string[] out 参数上下
+限
+count int out 参数个数
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统参数类别函式  – 39READ_param_data ：取得参数资料
+函式名称 short READ_param_data(…)
+引数变数名称 型别 [in/out] 说明
+ParamStart int in 参数起始号
+码
+ParamEnd int in 参数终止号
+码
+ParmData int[] out 参数资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 ※  所指定的参数号码在控制器上不存在或取得失败时， ParamType 会
+被设为 -1
+WRITE_param_single ：写入单笔参数资料
+函式名称 short WRITE_param_single(…)
+引数变数名称 型别 [in/out] 说明
+ParamID int in 参数编号
+val int in 欲写入之参数
+值
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+PLC类别函式  – 4011 PLC类别函式
+READ_plc_type ：取得 PLC位址的型别
+函式名称 short READ_plc_type(…)
+引数变数名称 型别 [in/out] 说明
+Addr string in ex:I,O,C,S,A,R
+PlcType short out 0:byte 1:short 2:int
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_plc_type2 ：取得 PLC位址的型别及位址大小
+函式名称 short READ_plc_type2(…)
+引数变数名称 型别 [in/out] 说明
+Addr string in ex:I,O,C,S,A,R
+PlcType short out 0:byte 1:short 2:int
+PlcStart int out 位址起始号码
+PlcEnd int out 位址结束号码
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 I,O 数量依所选用之 I/O卡而定
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+PLC类别函式  – 41READ_plc_addr ：取得 PLC位址资料
+函式名称 short READ_plc_addr(…)
+引数变数名称 型别 [in/out] 说明
+Addr string in ex:I,O,C,S,A,R
+PlcStart int in 位址起始值
+PlcEnd int in 位址终止值
+PlcType short out 0:byte 1:short 2:int
+PlcDataB byte[] out Plc资料 (byte)
+PlcDataS short[] out Plc资料 (short)
+PlcDataI int[] out Plc资料 (int)
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 取得值会被放入 PlcData(B,S,I) 的阵列中，如果该号码取得失败，此阵列
+值会被设为 null
+WRITE_plc_addr ：写入 PLC位址资料
+函式名称 short WRITE_plc_addr(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+PLC类别函式  – 42引数变数名称 型别 [in/out] 说明
+Addr string in ex:I,C,S,R
+PlcStart int in 位址起始值
+PlcEnd int in 位址终止值
+PlcType short in 0:byte 1:short 2:int
+PlcDataB byte[] in Plc资料 (byte)
+PlcDataS short[] in Plc资料 (short)
+PlcDataI int[] in Plc资料 (int)
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_plc_ver ：PLC版本
+函式名称 short READ_plc_ver(…)
+引数变数名称 型别 [in/out] 说明
+Version string out Plc版本信息
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+DOWNLOAD_plc_ladder ：下载远端 ladder 档案
+函式名称 short DOWNLOAD_plc_ladder (…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+PLC类别函式  – 43引数变数名称 型别 [in/out] 说明
+Destination string in 下载目的路
+径
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_plc_ibit ：取得 PLC I Bit 位址资料
+READ_plc_obit ：取得 PLC O Bit 位址资料
+READ_plc_cbit ：取得 PLC C Bit 位址资料
+READ_plc_sbit ：取得 PLC S Bit 位址资料
+READ_plc_abit ：取得 PLC A Bit 位址资料
+函式名称 short READ_plc_ibit(…)
+short READ_plc_obit(…)
+short READ_plc_cbit(…)
+short READ_plc_sbit(…)
+short READ_plc_abit(…)
+引数变数名称 型别 [in/out] 说明
+PlcStart int in 位址起始值
+PlcEnd int in 位址终止值
+PlcData byte[] out Plc资料 (byte)
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+PLC类别函式  – 44READ_plc_register ：取得 PLC Register 位址资料
+函式名称 short READ_plc_register(…)
+引数变数名称 型别 [in/out] 说明
+PlcStart int in 位址起始值
+PlcEnd int in 位址终止值
+PlcData int[] out Plc资料 (int)
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_plc_register ：取得 PLC Register 位址字串资料
+函式名称 short READ_plc_register(…)
+引数变数名称 型别 [in/out] 说明
+RAddress int in 位址
+PlcData string out Plc资料 (string)
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_plc_timer ：取得 PLC Timer 位址资料
+函式名称 short READ_plc_timer(…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+PLC类别函式  – 45引数变数名称 型别 [in/out] 说明
+PlcStart int in 位址起始值
+PlcEnd int in 位址终止值
+PlcTimerValue int[] out Plc Timer 值
+PlcTimerSetting int[] out Plc Timer 设定
+PlcTimerState short[] out Plc Timer 状态
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_plc_counter ：取得 PLC Counter 位址资料
+函式名称 short READ_plc_timer(…)
+引数变数名称 型别 [in/out] 说明
+PlcStart int in 位址起始值
+PlcEnd int in 位址终止值
+PlcCounterValue int[] out Plc Counter 值
+PlcCounterSettin
+gint[] out Plc Counter 设
+定
+PlcCounterState short[] out Plc Counter 状
+态
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+PLC类别函式  – 46WRITE_plc_ibit ：写入 PLC I BIT 位址资料
+WRITE_plc_cbit ：写入 PLC C BIT 位址资料
+WRITE_plc_sbit ：写入 PLC S BIT 位址资料
+函式名称 short WRITE_plc_ibit(…)
+short WRITE_plc_cbit(…)
+short WRITE_plc_sbit(…)
+引数变数名称 型别 [in/out] 说明
+PlcStart int in 位址起始值
+PlcEnd int in 位址终止值
+PlcData byte[] in Plc资料 (byte)
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+ 
+WRITE_plc_register ：写入 PLC Register 位址资料
+函式名称 short WRITE_plc_register(…)
+引数变数名称 型别 [in/out] 说明
+PlcStart int in 位址起始值
+PlcEnd int in 位址终止值
+PlcData int[] in Plc资料 (int)
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+PLC类别函式  – 47
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统变数函式  – 4812 系统变数函式
+READ_state_variable ：系统状态变数信息
+函式名称 short READ_state_variable(...)
+   引数变数名称 型别 [in/out ] 说明
+StateStart int in 位址起始值
+StateStart int in 位址终止值
+StateVariable int[] out 系统状态变数
+资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_debug_variable ：取得系统诊断变数资料
+函式名称 short READ_debug_variable (…)
+引数变数名称 型别 [in/out] 说明
+DebugStart int in 位址起始值
+DebugEnd int in 位址终止值
+DebugVariable int[] out 系统诊断变数
+资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注 : 系统诊断变数 77、78为控制器上专用的信息，如需系统剩余存储
+器信息请参考诊断变数 7号。
+ 
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统变数函式  – 49READ_system_variable ：取得系统变数资料 (#)
+函式名称 short READ_system_variable (…)
+引数变数名称 型别 [in/out] 说明
+SystemID int in 轴群编号
+SystemStart int in 位址起始
+值
+SystemEnd int in 位址终止
+值
+DebugVariable double[] out 系统变数
+资料
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_useTime ：系统使用期限
+函式名称 short READ_useTime (…)
+引数变数名称 型别 [in/out] 说明
+Status String out 目前机台使用
+时间状态
+TimeStart String out 使用开始时间
+TimeExpire String out 使用过期时间
+TimeRemain int out 剩余多久  (hr)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统变数函式  – 50传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注：软件版本  10.116.24x 以上 才支援
+Read_remoteTime ：系统目前时间
+函式名称 short READ_remoteTime (…)
+引数变数名称 型别 [in/out] 说明
+remoteTime DateTime out 目前机台系
+统时间
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+WRITE_remoteDate ：修改系统日期
+函式名称 short WRITE_remoteDate (…)
+引数变数名称 型别 [in/out] 说明
+Year Int out 年
+Month Int Out 月
+Day Int Out 日
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+WRITE_remoteTime ：修改系统时间
+函式名称 short WRITE_remoteTime (…)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统变数函式  – 51引数变数名称 型别 [in/out] 说明
+Hour Int Out 时
+Minute Int Out 分
+Second Int Out 秒
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+ClearCache ：清除 RemoteAPI 内所有 buffer
+函式名称 short ClearCache ()
+引数 N/A
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+注：清除所有 buffer ( 如：序号、主机板、机型、代码等等 )，再呼叫相
+关API即可取得正确信息
+READ_SSV_GetDeviceInfo
+函式名称 READ_SSV_GetDeviceInfo( ... )
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统变数函式  – 52引数变数名称 型别 [in/out ]说明
+nAxisId int in 轴ID
+nFunctionCode int in 要取哪一种信息
+  enum 
+DevInfoFuncCode
+  {
+   SVPackModel = 
+0x11,
+   SVPackSoftVer,
+   SVPackSN,
+   SVMotorModel,
+   SVMotorSN,
+   ENCSoftVer,
+   ENCResolution,
+   ENCSensorType,
+   ENCSN,
+  }
+szInfo string out 信息数值
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_SerialStateVar_ServiceReg
+函式名称  READ_SerialStateVar_ServiceReg(...)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统变数函式  – 53引数变数名称 型别 [in/out ] 说明
+nAxisType int in AXIS : 0
+SPLCA : 1
+ROT : 2
+nDeviceID int in 装置 ID
+nHandle int out 注册成功时回传本次
+注册的代码 ，其他的
+SerialStateVar 函式会用
+到
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_SerialStateVar_ServiceUnReg
+函式名称  READ_SerialStateVar_ServiceUnReg( int nHandle )
+引数变数名称 型别 [in/out ] 说明
+nHandle int in 指定的更新服务的
+注册代码
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_SerialStateVar_GetCapacity
+函式名称  READ_SerialStateVar_GetCapacity(...)
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统变数函式  – 54引数变数名称 型别 [in/out ] 说明
+nHandle int in 指定的更新服务的
+注册代码
+nCapacity int out 有多少 StateVar 变数
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+READ_SerialStateVar_Dump
+函式名称 READ_SerialStateVar_Dump(...)
+引数变数名称 型别 [in/out ]说明
+nHandle int in 指定的更新
+服务的注册代
+码
+nLength int in 要抓多少个状
+态变数规格的
+资料结构
+tStateVarSpecLi
+stList<TSerialState
+VarSpec>out 每个状态变
+数规格的资料
+结构
+nHexFormat int out 16进位还是 10
+进位
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+系统变数函式  – 55READ_SerialStateVar_GetValue
+函式名称  READ_SerialStateVar_GetValue( ... )
+引数变数名称 型别 [in/out ]说明
+nHandle int in 指定的更新服
+务的注册代码
+nLength int in 要抓多少个状
+态变数
+SerialStateVarList List<Int32> out 每个状态变数
+的数值
+nStatus int out 结果
+        FAIL = 0,
+        SUCCESS,
+        BUSY,
+        EXCEPTION,
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+更新控制器相关函式  – 5613 更新控制器相关函式
+UPLOAD_software ：更新控制器软件
+UPLOAD_ plc_file ：更新控制器 PLC
+UPLOAD_param_file ：更新控制器参数
+函式名称 short Update_software (…)
+short Update_plc_file (…)
+short Update_param_file (…)
+引数变数名称 型别 [in/out] 说明
+Source String out 路径档名
+Software ：
+*\package_xxxx.zip
+PLC：*\cnc.lad
+参数： *\param.dat
+传回值 0:完成作业，其他请参考 3-2回传错误说明
+备注：更新完后，须重新开启控制器，才可进行更新
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+附录  – 5714 附录
+READ_nc_OPLog 表示的含意  
+Log资料格式  ( 4Bytes )
+Name Data Type Size 说明
+Event ID UINT16 2-byte 按键、警报、 PLC、时间 ...等
+device
+Event Data UINT16 2-byte Event 数值，如 PLC-bit 数值、键盘
+对应数值、警报号码 &发生的轴向
+纪录栏位格式
+Event Name Event ID Event Data
+StartUp 0x0002 Null
+ShutDown 0x0003 Null
+KeyPressed 0x0005
+Date 0x0300~0x03FF
+00000011aaaaaaaa
+a:YearCurrent date 
+bbbbbbbbcccccccc
+b:Month
+c:Date
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+附录  – 58Event Name Event ID Event Data
+Time 0x0400~0x04FF 
+00000100aaaaaaaa
+a: secondsCurrent time 
+bbbbbbbbcccccccc
+b: hours
+c: minutes
+Alarm 0xWC00~0xWCFF
+zz001100aaaaaaaa
+a: ClassID
+z:Alarm ID(10~11bit)Alarm ID
+bbbbbbcccccccccc
+b: Object ID
+c: Alarm ID(0~9bit) 
+安川伺服警报须要 12bit 才能完整
+纪录
+I-bit off 0x0010 Index
+I-bit on 0x0011 Index
+O-bit off 0x0012 Index
+O-bit on 0x0013 Index
+C-bit off 0x0014 Index
+C-bit on 0x0015 Index
+S-bit off 0x0016 Index
+S-bit on 0x0017 Index
+R 0x0020 Index
+P 0x0021 Index
+@ 0x0022 Index
+L 0x0023 Index
+
+机床产品 /Machine Tool Products
+                             – 
+                            RemoteAPI 操作手册
+附录  – 59Event Name Event ID Event Data
+D 0x0024 Index
+K 0x0025 Index
+ParameterOnChange 0x0030 Param No.
+WorkPieceOnChange 0x0031 WorkPieceFrame ID
+ToolCompesationOnChange 0x0032 aaaaaaaabbbbcccc 
+a: ToolNo( 第几把刀 )
+b: AxisNo 轴向
+c: ToolCompesationType
+UserOnChange 0x0033 0x0033XXXX 
+使用者权限参考 R5997
+0009: SyntecLogIn(R5997=9)
+0063: MakerLogIn(R5997=99)
+0064: AdminLogIn(R5997=100)
+0065: OtherLogIn(R5997=101)
+03E7: LogOut(R5997=999)
+(一开机属于未登陆状态 )
+Other: XLogIn
+( XXXX 转十进位为 X )
+人机启动 0x1002 Null
+人机关闭 0x1003 Null
+Action(undefined) 0x1004 The CRC16 value of the action 
+name
+Action 0x1005 The mapping value of LogTable
